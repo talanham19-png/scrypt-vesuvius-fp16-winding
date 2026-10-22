@@ -1,0 +1,159 @@
+{
+ "title": "fp16 Turing port — precision gate SUMMARY",
+ "written": "2026-10-12",
+ "mode": "emulated_cuda_autocast on box CPU (+ 4-ray RTX 2070 probe documented in GOLD_DIG/HANDOFF)",
+ "hardware_scope": "Turing/RTX 2070 path and CPU emulation of that autocast; Turing has no native bf16 and may emulate it",
+ "wording": "bf16 diverges from fp32 on this hardware — not a claim that stock/pipeline is wrong",
+ "setA": {
+  "n_rays": 55,
+  "n_ref": 1114,
+  "fp32": {
+   "within_0.25": 1111,
+   "within_0.25_frac": 0.9973070017953322,
+   "within_1.0": 1114,
+   "level_agree_within_0.25": 1.0,
+   "mean_abs_dt_within_0.25": 0.025
+  },
+  "fp16": {
+   "within_0.25": 1111,
+   "within_0.25_frac": 0.9973070017953322,
+   "within_1.0": 1113,
+   "level_agree_within_0.25": 1.0,
+   "mean_abs_dt_within_0.25": 0.043,
+   "fp16_overflow_total": 0
+  },
+  "bf16": {
+   "within_0.25": 434,
+   "within_0.25_frac": 0.3895870736086176,
+   "within_1.0": 1102,
+   "level_agree_within_0.25": 1.0,
+   "mean_abs_dt_within_0.25": 0.124
+  },
+  "PASS": true,
+  "source": "out/fp16port/precision_rays50.json (rerun 2026-10-12, matches recorded numbers exactly)",
+  "selection": "out/fp16port/rays50_selection.json",
+  "seed": 20261005,
+  "rerun_20261012": {
+   "fp32": "1111/1114 (1114 within 1.0)",
+   "fp16": "1111/1114 (1113 within 1.0)",
+   "bf16": "434/1114 (1102 within 1.0)",
+   "level_agree_matched": 1.0,
+   "fp32_miss_rays": [
+    25355,
+    2059
+   ],
+   "fp16_miss_rays": [
+    49594,
+    2059,
+    2010
+   ]
+  }
+ },
+ "setB": {
+  "n_rays": 55,
+  "n_ref": 1188,
+  "fp32": {
+   "n_ref": 1188,
+   "within_0.25": 1188,
+   "within_0.25_frac": 1.0,
+   "within_1.0": 1188,
+   "level_agree_within_0.25": 1.0,
+   "level_agree_within_1.0": 1.0,
+   "mean_abs_dt_within_0.25": 0.02851798473457533
+  },
+  "fp16": {
+   "n_ref": 1188,
+   "within_0.25": 1184,
+   "within_0.25_frac": 0.9966329966329966,
+   "within_1.0": 1187,
+   "level_agree_within_0.25": 1.0,
+   "level_agree_within_1.0": 1.0,
+   "mean_abs_dt_within_0.25": 0.040429796905546274,
+   "fp16_overflow_total": 0
+  },
+  "bf16": {
+   "n_ref": 1188,
+   "within_0.25": 463,
+   "within_0.25_frac": 0.3897306397306397,
+   "within_1.0": 1174,
+   "level_agree_within_0.25": 1.0,
+   "level_agree_within_1.0": 1.0,
+   "mean_abs_dt_within_0.25": 0.11961979303130836
+  },
+  "PASS": true,
+  "source": "out/fp16port/precision_rays50b.json (merged after S3 ReadTimeout recovery)",
+  "selection": "out/fp16port/rays50b_selection.json",
+  "seed": 202610052,
+  "recovery": {
+   "partial_rays": 29,
+   "missing_rerun_rays": 26,
+   "merged": 55,
+   "partial_file": "precision_rays50b_partial29.json",
+   "missing_file": "precision_rays50b_missing.json",
+   "cause": "S3 ReadTimeout mid-run on original pid 759417"
+  },
+  "fp16_specific_misses": {
+   "rays": {
+    "4550": "fp16 31/32 vs fp32 32/32",
+    "4143": "fp16 24/27 vs fp32 27/27"
+   },
+   "note": "set B fp16 misses are NOT the same class as fp32 (fp32 misses none); levels 100%"
+  }
+ },
+ "both_sets": {
+  "fp32": {
+   "n_ref": 2302,
+   "within_0.25": 2299,
+   "within_0.25_frac": 0.9986967854039965,
+   "within_1.0": 2302,
+   "level_agree_within_0.25": 1.0,
+   "mean_abs_dt_within_0.25": 0.02681790598724467
+  },
+  "fp16": {
+   "n_ref": 2302,
+   "within_0.25": 2295,
+   "within_0.25_frac": 0.9969591659426585,
+   "within_1.0": 2300,
+   "level_agree_within_0.25": 1.0,
+   "mean_abs_dt_within_0.25": 0.0416740215843864
+  },
+  "bf16": {
+   "n_ref": 2302,
+   "within_0.25": 897,
+   "within_0.25_frac": 0.3896611642050391,
+   "within_1.0": 2276,
+   "level_agree_within_0.25": 1.0,
+   "mean_abs_dt_within_0.25": 0.12173909049442115
+  },
+  "PASS": true,
+  "bf16_within_1.0_frac": 0.9887054735013032,
+  "bf16_systematic_offset_vox": "~0.3 (setB mean|dt| at tol1 0.337; ~2.5% of ~12-vox spacing)"
+ },
+ "overlap_check": {
+  "setA_rays": 55,
+  "setB_rays": 55,
+  "overlap": 0,
+  "overlap_ids": [],
+  "ok": true
+ },
+ "ct_cache": {
+  "path": "data/fp16port/ctL2_cache",
+  "bytes_before_setB": 4229955584,
+  "bytes_now": 4250927104,
+  "bytes_fetched_during_setB": 20971520,
+  "MB_fetched_during_setB": 20.97,
+  "MB_now": 4250.93
+ },
+ "gate_criterion": "fp16 within 0.25 vox on >=99% of crossings AND 100% winding-level agreement vs published store",
+ "memory_note": "only fp32 stock exceeds 8 GB (12.73 GB); bf16/fp16 stock 7.22 GB",
+ "villa_patch": {
+  "file": "entry2/villa_fp16_precision.patch",
+  "base": "villa 5a4388f",
+  "tests": "entry2/tests: 15 passed (CPU fp32 chunked==stock <1e-5 for chunk 1..500)",
+  "default": "bf16 (unchanged)"
+ },
+ "ray_id_map": "out/fp16port/ray_id_map.json (0 mismatches over 66,256 subset rays)",
+ "gpu_rerun_20261012": {
+  "status": "pending: Atrium offline; bundle staged at entry2/atrium/"
+ }
+}
